@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h2>Welcome, {{ current_user.username }}!</h2>
+
+    <h3>Your Animals:</h3>
+    <ul>
+        {% for animal in current_user.animals %}
+        <li>
+            <strong>Name:</strong> {{ animal.name }}<br>
+            <strong>Type:</strong> {{ animal.type }}<br>
+            <strong>Breed:</strong> {{ animal.breed }}<br>
+            <strong>Color:</strong> {{ animal.color }}<br>
+            <strong>Weight:</strong> {{ animal.weight }} lbs<br>
+            <strong>Temperament:</strong> {{ animal.temperament }}<br>
+            {% if animal.photo %}
+                <img src="{{ get_photo_url(animal.photo) }}" alt="{{ animal.name }} Photo" style="max-width: 200px; max-height: 200px;"><br>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Add more content as needed -->
+{% endblock %}

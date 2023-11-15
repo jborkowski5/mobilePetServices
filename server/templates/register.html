@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h2>Register</h2>
+    <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <label for="username">Username:</label><br>
+        {{ form.username() }}<br>
+        <label for="password">Password:</label><br>
+        {{ form.password() }}<br>
+        <label for="name">Name:</label><br>
+        {{ form.name() }}<br>
+        <label for="address">Address:</label><br>
+        {{ form.address() }}<br>
+        <label for="phone_number">Phone Number:</label><br>
+        {{ form.phone_number() }}<br>
+        
+        <!-- Add the following lines for the new animal fields -->
+        <label for="animal_name">Animal Name:</label><br>
+        {{ form.animal_name() }}<br>
+        <label for="animal_type">Animal Type:</label><br>
+        {{ form.animal_type() }}<br>
+        <label for="animal_breed">Animal Breed:</label><br>
+        {{ form.animal_breed() }}<br>
+        <label for="animal_color">Animal Color:</label><br>
+        {{ form.animal_color() }}<br>
+        <label for="animal_weight">Animal Weight:</label><br>
+        {{ form.animal_weight() }}<br>
+        <label for="animal_temperament">Animal Temperament:</label><br>
+        {{ form.animal_temperament() }}<br>
+        {{ form.animal_photo.label }} {{ form.animal_photo() }}<br>
+        
+        {{ form.submit() }}
+    </form>
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+</body>
+</html>
