@@ -1,29 +1,30 @@
 // App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import HomePage from './HomePage';
+import Home from './Home';
 import About from './About';
-import Services from './Services';
+import Services from './Services.js';
 import BookAppointment from './BookAppointment';
 import Login from './Login';
 import Profile from './Profile';
-import Navbar from './Navbar';
-import AuthRoute from './AuthRoute'; // Import AuthRoute component
+import NavBar from './NavBar';
 import Register from './Register';
+import Contact from './Contact';
 
 function App() {
   return (
-    <Router> {/* Wrap your entire application with BrowserRouter */}
+    <Router>
       <div>
-        <Navbar />
+        <NavBar />
         <Switch>
-          <Route exact path="/" component={HomePage} />
+          <Route exact path="/" component={Home} />
           <Route path="/about" component={About} />
           <Route path="/services" component={Services} />
           <Route path="/book-appointment" component={BookAppointment} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <AuthRoute path="/profile" component={Profile} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/contact" component={Contact} />
         </Switch>
       </div>
     </Router>

@@ -4,7 +4,7 @@ const Services = () => {
   return (
     <div>
       <h1>Services</h1>
-      {/* Add content for the services page */}
+      {/* Add content for the Services page */}
     </div>
   );
 };

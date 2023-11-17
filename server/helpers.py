@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+#helpers.py
+from datetime import datetime
 
 def is_available(schedule, date, time):
     # Check if the given date and time are available in the schedule
