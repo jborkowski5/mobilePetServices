@@ -12,10 +12,11 @@
     <nav>
         <ul>
             <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li><a href="{{ url_for('storefront') }}">Services</a></li>
             {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('profile') }}">Profile</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                <li><a href="{{ url_for('change_username') }}">Change Username</a></li>
+                <li><a href="{{ url_for('change_password') }}">Change Password</a></li>
             {% else %}
                 <li><a href="{{ url_for('login') }}">Login</a></li>
                 <li><a href="{{ url_for('register') }}">Register</a></li>

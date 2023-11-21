@@ -1,11 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <h2>Welcome, {{ current_user.username }}!</h2>
+    <h2>Welcome, {{ user.username }}!</h2>
 
     <h3>Your Animals:</h3>
     <ul>
-        {% for animal in current_user.animals %}
+        {% for animal in user.animals %}
         <li>
             <strong>Name:</strong> {{ animal.name }}<br>
             <strong>Type:</strong> {{ animal.type }}<br>
@@ -16,9 +16,24 @@
             {% if animal.photo %}
                 <img src="{{ get_photo_url(animal.photo) }}" alt="{{ animal.name }} Photo" style="max-width: 200px; max-height: 200px;"><br>
             {% endif %}
+            
+            <form method="POST" action="{{ url_for('delete_animal', animal_id=animal.id) }}">
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="hidden" name="csrf_token" id="csrf_token" value="">
+                <button type="submit">Delete</button>
+            </form>
         </li>
         {% endfor %}
     </ul>
 
     <!-- Add more content as needed -->
+
+    <script>
+        // Fetch CSRF token and set it in the form
+        fetch('/get_csrf_token')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('csrf_token').value = data.csrf_token;
+            });
+    </script>
 {% endblock %}

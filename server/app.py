@@ -1,5 +1,5 @@
 # Import necessary modules
-from flask import jsonify, flash, request, Flask, render_template, redirect, url_for
+from flask import jsonify, flash, request, Flask, render_template, redirect, url_for, flash
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, PasswordField, SubmitField
@@ -9,6 +9,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from config import db, create_app
+from werkzeug.utils import secure_filename
 # Import from other files
 from models import User, Animal, Appointment, Service, Employee  # Importing the database models
 from helpers import is_available, update_schedule  # Helper functions
@@ -17,7 +18,6 @@ app = create_app()  # Create the Flask app from config.py
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
 
 # User loader for Flask-Login
 @login_manager.user_loader
@@ -37,7 +37,6 @@ class RegistrationForm(FlaskForm):
     animal_name = StringField('Animal Name')
     animal_type = StringField('Animal Type')
     animal_breed = StringField('Animal Breed')
-    animal_color = StringField('Animal Color')
     animal_weight = IntegerField('Animal Weight')
     animal_temperament = StringField('Animal Temperament')
     animal_photo = FileField('Animal Photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
@@ -72,12 +71,16 @@ def register():
             return redirect(url_for('register'))
 
         hashed_password = generate_password_hash(form.password.data, method='pbkdf2:sha256', salt_length=8)
-        new_user = User(username=form.username.data, password=hashed_password, name=form.name.data, address=form.address.data, phone_number=form.phone_number.data)
+        new_user = User(
+            username=form.username.data, 
+            password=hashed_password, 
+            name=form.name.data, 
+            address=form.address.data, 
+            phone_number=form.phone_number.data)
 
         new_animal = Animal(
             type=form.animal_type.data,
             breed=form.animal_breed.data,
-            color=form.animal_color.data,
             weight=form.animal_weight.data,
             temperament=form.animal_temperament.data,
             name=form.animal_name.data,
@@ -98,8 +101,6 @@ def register():
     flash("Form validation failed", 'danger')
     return render_template('register.html', form=form)
 
-
-    
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()], render_kw={"placeholder": "Enter your username"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": "Enter your password"})
@@ -120,8 +121,6 @@ def login():
 
     return render_template('login.html', form=form)
 
-
-
 @app.route('/logout')
 def logout():
     logout_user()
@@ -133,70 +132,121 @@ def profile():
     print(f"Current User: {current_user}")  # Add this line for debugging
     return render_template('profile.html', user=current_user)
 
+class ChangeUsernameForm(FlaskForm):
+    new_username = StringField('New Username')
+    submit_username = SubmitField('Change Username')
 
-@app.route('/appointments', methods=['POST'])
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Old Password')
+    new_password = PasswordField('New Password')
+    submit_password = SubmitField('Change Password')
+
+@app.route('/change_username', methods=['GET', 'POST'])
 @login_required
-def schedule_appointment():
-    # Parse request data and create a new appointment
-    data = request.get_json()
-    service_id = data.get('service_id')
-    date = data.get('date')
-    time = data.get('time')
-    owner_id = data.get('owner_id')  # Assuming you receive the owner_id in the request
+def change_username():
+    form = ChangeUsernameForm()
+    if form.validate_on_submit():
+        current_user.username = form.new_username.data
+        db.session.commit()
+        flash('Username changed successfully!', 'success')
+        return redirect(url_for('profile'))
+    return render_template('change_username.html', form=form)
 
-    # Validate input and check availability
-    service = Service.query.get_or_404(service_id)
-    appointment_date = datetime.strptime(date, '%Y-%m-%d').date()
-    appointment_time = datetime.strptime(time, '%H:%M').time()
+@app.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if check_password_hash(current_user.password, form.old_password.data):
+            current_user.password = generate_password_hash(form.new_password.data, method='pbkdf2:sha256', salt_length=8)
+            db.session.commit()
+            flash('Password changed successfully!', 'success')
+            return redirect(url_for('profile'))
+        else:
+            flash('Invalid old password. Please try again.', 'danger')
+    return render_template('change_password.html', form=form)
 
-    # Check availability against the owner's schedule
-    user = User.query.get_or_404(user_id)
-    if not is_available(user.availability_schedule, appointment_date, appointment_time):
-        return jsonify({"error": "The selected time is not available."}), 400
 
-    # Create appointment and update schedule
-    appointment = Appointment(
-        service_id=service_id,
-        user_id=current_user.id,
-        date=appointment_date,
-        time=appointment_time,
-        owner_id=owner_id
-    )
+class AddAnimalForm(FlaskForm):
+    name = StringField('Name')
+    type = StringField('Type')
+    breed = StringField('Breed')
+    weight = IntegerField('Weight')
+    temperament = StringField('Temperament')
+    photo = FileField('Animal Photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
+    submit_add_animal = SubmitField('Add Animal')
 
-    # Update owner's schedule
-    updated_schedule = update_schedule(owner.availability_schedule, appointment_date, appointment_time)
-    owner.availability_schedule = updated_schedule
+class EditAnimalForm(FlaskForm):
+    name = StringField('Name')
+    type = StringField('Type')
+    breed = StringField('Breed')
+    weight = IntegerField('Weight')
+    temperament = StringField('Temperament')
+    photo = FileField('Animal Photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
+    submit_edit_animal = SubmitField('Save Changes')
 
-    db.session.add(appointment)
+@app.route('/add_animal', methods=['GET', 'POST'])
+@login_required
+def add_animal():
+    form = AddAnimalForm()
+    if form.validate_on_submit():
+        new_animal = Animal(
+            name=form.name.data,
+            type=form.type.data,
+            breed=form.breed.data,
+            weight=form.weight.data,
+            temperament=form.temperament.data,
+            user=current_user
+        )
+        new_animal.upload_photo(form.photo.data)  # Call upload_photo with the FileField data
+        db.session.add(new_animal)
+        db.session.commit()
+        flash('Animal added successfully!', 'success')
+        return redirect(url_for('profile'))
+    return render_template('add_animal.html', form=form)
+
+@app.route('/edit_animal/<int:animal_id>', methods=['GET', 'POST'])
+@login_required
+def edit_animal(animal_id):
+    animal = Animal.query.get_or_404(animal_id)
+    form = EditAnimalForm(obj=animal)
+    if form.validate_on_submit():
+        form.populate_obj(animal)
+        # Check if a new photo was uploaded
+        if form.photo.data:
+            animal.upload_photo(form.photo.data)  # Call upload_photo with the FileField data
+        db.session.commit()
+        flash('Changes saved successfully!', 'success')
+        return redirect(url_for('profile'))
+    return render_template('edit_animal.html', form=form, animal=animal)
+
+
+@app.route('/delete_animal/<int:animal_id>', methods=['POST', 'DELETE'])
+@login_required
+def delete_animal(animal_id):
+    animal = Animal.query.get_or_404(animal_id)
+    db.session.delete(animal)
     db.session.commit()
+    flash('Animal deleted successfully!', 'success')
+    return redirect(url_for('profile'))
 
-    return jsonify({"message": "Appointment scheduled successfully"})
-
-
-@app.route('/appointments', methods=['GET'])
-@login_required
-def get_user_appointments():
-    appointments = Appointment.query.filter_by(user_id=current_user.id).all()
-    return jsonify([appointment.serialize() for appointment in appointments])
-
-
-@app.route('/services', methods=['GET'])
-def get_services():
-    services = Service.query.all()
-    return jsonify([service.serialize() for service in services])
-
-@app.route('/services/<int:service_id>', methods=['GET'])
-def get_service(service_id):
-    service = Service.query.get_or_404(service_id)
-    return jsonify(service.serialize())
+# @app.route('/appointments', methods=['GET'])
+# @login_required
+# def get_user_appointments():
+#     appointments = Appointment.query.filter_by(user_id=current_user.id).all()
+#     return jsonify([appointment.serialize() for appointment in appointments])
 
 
-@app.route('/storefront', methods=['GET'])
-@login_required
-def storefront():
-    services = Service.query.all()
-    return render_template('storefront.html', services=services)
+# @app.route('/services', methods=['GET'])
+# def get_services():
+#     services = Service.query.all()
+#     return jsonify([service.serialize() for service in services])
 
+
+# @app.route('/services/<int:service_id>', methods=['GET'])
+# def get_service(service_id):
+#     service = Service.query.get_or_404(service_id)
+#     return jsonify(service.serialize())
 
 if __name__ == '__main__':
     app.run(debug=True)
