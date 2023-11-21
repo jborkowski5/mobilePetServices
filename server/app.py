@@ -1,66 +1,23 @@
 # Import necessary modules
-from flask_restful import Resource
 from flask import jsonify, flash, request, Flask, render_template, redirect, url_for
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, PasswordField, SubmitField
-from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
+from datetime import datetime
 from flask_wtf.file import FileField, FileAllowed
-from flask_cors import CORS
-import logging
 from wtforms.validators import DataRequired
 from flask_wtf.csrf import CSRFProtect, generate_csrf
-from flask_restful import Api
-from sqlalchemy import MetaData
-
+from config import db, create_app
 # Import from other files
-from models import db, User, Animal, Service, Appointment  # Importing the database models
+from models import User, Animal, Appointment, Service, Employee  # Importing the database models
 from helpers import is_available, update_schedule  # Helper functions
 
+app = create_app()  # Create the Flask app from config.py
 login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
-def create_app():
-    app = Flask(__name__)
-    app.config['WTF_CSRF_ENABLED'] = True
-    csrf = CSRFProtect(app)  # Create Flask app instance
-    CORS(app, supports_credentials=True, resources={
-        r"/*": {"origins": "http://localhost:3000"}
-    })    
-
-    # App configurations
-    app.config['SECRET_KEY'] = 'joe'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-
-    # Configuring logging for the app
-    logging.basicConfig(level=logging.INFO)  # Set logging level to INFO
-
-    # Initialize database
-    db.init_app(app)
-    
-    # Initialize migration
-    migrate = Migrate(app, db)
-
-    # Initialize login manager
-    
-    login_manager.init_app(app)
-    login_manager.login_view = 'login'
-
-    # Instantiate REST API
-    api = Api(app)
-
-    # Global Jinja2 function for getting photo URL
-    def get_photo_url(filename):
-        return url_for("static", filename=f"uploads/{filename}")
-    
-    app.jinja_env.globals.update(get_photo_url=get_photo_url)
-
-    return app
-
-app = create_app()  # Create the Flask app
 
 # User loader for Flask-Login
 @login_manager.user_loader
@@ -77,6 +34,7 @@ class RegistrationForm(FlaskForm):
     phone_number = StringField('Phone Number')
 
     # Fields for the animal information
+    animal_name = StringField('Animal Name')
     animal_type = StringField('Animal Type')
     animal_breed = StringField('Animal Breed')
     animal_color = StringField('Animal Color')
@@ -192,8 +150,8 @@ def schedule_appointment():
     appointment_time = datetime.strptime(time, '%H:%M').time()
 
     # Check availability against the owner's schedule
-    owner = Owner.query.get_or_404(owner_id)
-    if not is_available(owner.availability_schedule, appointment_date, appointment_time):
+    user = User.query.get_or_404(user_id)
+    if not is_available(user.availability_schedule, appointment_date, appointment_time):
         return jsonify({"error": "The selected time is not available."}), 400
 
     # Create appointment and update schedule
