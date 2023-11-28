@@ -1,107 +1,69 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { AuthContext } from './AuthContext';
+import React, { useState } from 'react';
 
 const Login = () => {
-  const history = useHistory();
-  const { setLoginStatus } = useContext(AuthContext);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [csrfToken, setCsrfToken] = useState('');
-
-  useEffect(() => {
-    async function fetchCsrfToken() {
-      try {
-        const response = await fetch('http://127.0.0.1:5000/csrf_token', {
-          method: 'GET',
-          credentials: 'include',
-        });
-    
-        if (response.ok) {
-          const data = await response.json();
-          setCsrfToken(data.csrf_token);
-        } else {
-          console.error('Error fetching CSRF token:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching CSRF token:', error);
-      }
-    }
-    fetchCsrfToken();
-  }, []);
-
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
+    const [formData, setFormData] = useState({
+        username: '',
+        password: '',
     });
-  };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
+    };
 
-    try {
-      const response = await fetch('http://127.0.0.1:5000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken,
-        },
-        body: JSON.stringify(formData),
-        credentials: 'include',
-      });
+    const handleFormSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
 
-      if (response.ok) {
-        setLoginStatus(true);
-        history.push('/');
-      } else {
-        setErrorMessage('Invalid username or password.');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setErrorMessage('Unexpected error occurred.');
-    }
-  };
+            if (response.ok) {
+                const responseData = await response.json();
+                const { user_id } = responseData;
+            
+                console.log('Login successful! User ID:', user_id);
+                localStorage.setItem('userId', user_id);
+            } else {
+                const errorMessage = await response.json();
+                console.error('Login failed:', errorMessage.message);
+            }
+        } catch (error) {
+            console.error('Error occurred during login:', error);
+        }
+    };
 
-  return (
-    <div>
-      <h2>Login</h2>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      <form onSubmit={handleFormSubmit}>
+    return (
         <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleInputChange}
-            required
-          />
+            <h2>Login</h2>
+            <form onSubmit={handleFormSubmit}>
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                />
+                <br />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                />
+                <br />
+                <button type="submit">Login</button>
+            </form>
+            <br />
+            <p>Forgot your password? <a href="/change-password">Change Password</a></p>
+            {/* Replace "/change-password" with the actual route for changing the password */}
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      <p>
-        Don't have an account? <Link to="/register">Register</Link>
-      </p>
-    </div>
-  );
+    );
 };
 
 export default Login;

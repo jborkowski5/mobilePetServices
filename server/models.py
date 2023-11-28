@@ -26,7 +26,8 @@ class User(db.Model, UserMixin, SerializerMixin):
 
     animals = db.relationship('Animal', back_populates='user', cascade='all, delete-orphan') # Relationship mapping the user to related animals
 
-    serialize_rules = ('id', 'name', 'username', 'address', 'phone_number', 'email')
+    serialize_rules = ('-animals.appointments', '-animals.user', )
+    # serialize_rules = ('id', 'name', 'username', 'address', 'phone_number', 'email')
 
     # User Methods
     def get_id(self):
@@ -62,17 +63,19 @@ class Animal(db.Model, UserMixin, SerializerMixin):
 
     user = db.relationship('User', back_populates='animals') # Relationship mapping the animal to related users
 
-    serialize_rules = ('id', 'name', 'type', 'breed', 'weight', 'temperament', 'photo')
+    serialize_rules = ('-appointments.animal', '-user.animals', )
+    # serialize_rules = ('id', 'name', 'type', 'breed', 'weight', 'temperament', 'photo')
 
     # Method to upload photo
     def upload_photo(self, photo_file):
         if photo_file:
             filename = secure_filename(photo_file.filename)
-            upload_folder = "static/uploads"
-            os.makedirs(upload_folder, exist_ok=True)  # Creates a directory only needed for first upload
-            photo_path = os.path.join(upload_folder, filename)
+            unique_filename = str(uuid.uuid4()) + '_' + filename  # Add a unique identifier to the filename
+            upload_folder = app.config['UPLOAD_FOLDER']  # Access the upload folder from app configuration
+            os.makedirs(upload_folder, exist_ok=True)  # Ensure the directory exists
+            photo_path = os.path.join(upload_folder, unique_filename)
             photo_file.save(photo_path)
-            self.photo = filename  # Update database with the filename
+            self.photo = unique_filename  # Update database with the unique filename
 
     def __repr__(self):
         return f"Animal('{self.type}', '{self.breed}', '{self.color}')"
@@ -111,7 +114,8 @@ class Appointment(db.Model, UserMixin, SerializerMixin):
     # Foreign key to store the animal id
     animal_id = db.Column(db.Integer, db.ForeignKey('animals.id'))
 
-    serialize_rules = ('id', 'date', 'time')
+    serialize_rules = ('id', 'date', 'time', '-services', '-employees', 'animal.id', 'animal.name', )
+    # serialize_rules = ('id', 'date', 'time')
 
     def __repr__(self):
         return f"Appointment('{self.id}')"
@@ -124,7 +128,8 @@ class Employee(db.Model, UserMixin, SerializerMixin):
     
     appointments = db.relationship('Appointment', secondary='employee_appointments', back_populates='employees')
 
-    serialize_rules = ('id', 'name')
+    serialize_rules = ('-appointments.employees', )
+    # serialize_rules = ('id', 'name')
 
     def __repr__(self):
         return f'<Employee {self.id}, {self.name}>'
@@ -142,7 +147,8 @@ class Service(db.Model, UserMixin, SerializerMixin):
 
     appointments = db.relationship('Appointment', secondary='appointment_services', back_populates='services')
 
-    serialize_rules = ('id', 'name', 'description', 'duration', 'price')
+    serialize_rules = ('-appointments.services', )
+    # serialize_rules = ('id', 'name', 'description', 'duration', 'price')
 
     def __repr__(self):
         return f"Service('{self.name}')"

@@ -19,21 +19,9 @@
             
             <form method="POST" action="{{ url_for('delete_animal', animal_id=animal.id) }}">
                 <input type="hidden" name="_method" value="DELETE">
-                <input type="hidden" name="csrf_token" id="csrf_token" value="">
                 <button type="submit">Delete</button>
             </form>
         </li>
         {% endfor %}
     </ul>
-
-    <!-- Add more content as needed -->
-
-    <script>
-        // Fetch CSRF token and set it in the form
-        fetch('/get_csrf_token')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('csrf_token').value = data.csrf_token;
-            });
-    </script>
 {% endblock %}

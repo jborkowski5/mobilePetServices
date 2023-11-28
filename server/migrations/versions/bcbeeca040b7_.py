@@ -1,8 +1,8 @@
-"""Initial Tables
+"""empty message
 
-Revision ID: cc4e0ed5ffbf
+Revision ID: bcbeeca040b7
 Revises: 
-Create Date: 2023-11-20 19:10:22.224602
+Create Date: 2023-11-24 12:02:37.922640
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'cc4e0ed5ffbf'
+revision = 'bcbeeca040b7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -51,7 +51,7 @@ def upgrade():
     sa.Column('temperament', sa.String(length=50), nullable=True),
     sa.Column('photo', sa.String(length=100), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_animals_user_id_users')),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('appointments',
@@ -59,20 +59,20 @@ def upgrade():
     sa.Column('date', sa.Date(), nullable=False),
     sa.Column('time', sa.Time(), nullable=False),
     sa.Column('animal_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['animal_id'], ['animals.id'], ),
+    sa.ForeignKeyConstraint(['animal_id'], ['animals.id'], name=op.f('fk_appointments_animal_id_animals')),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('appointment_services',
     sa.Column('appointment_id', sa.Integer(), nullable=True),
     sa.Column('service_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['appointment_id'], ['appointments.id'], ),
-    sa.ForeignKeyConstraint(['service_id'], ['services.id'], )
+    sa.ForeignKeyConstraint(['appointment_id'], ['appointments.id'], name=op.f('fk_appointment_services_appointment_id_appointments')),
+    sa.ForeignKeyConstraint(['service_id'], ['services.id'], name=op.f('fk_appointment_services_service_id_services'))
     )
     op.create_table('employee_appointments',
     sa.Column('employee_id', sa.Integer(), nullable=False),
     sa.Column('appointment_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['appointment_id'], ['appointments.id'], ),
-    sa.ForeignKeyConstraint(['employee_id'], ['employees.id'], ),
+    sa.ForeignKeyConstraint(['appointment_id'], ['appointments.id'], name=op.f('fk_employee_appointments_appointment_id_appointments')),
+    sa.ForeignKeyConstraint(['employee_id'], ['employees.id'], name=op.f('fk_employee_appointments_employee_id_employees')),
     sa.PrimaryKeyConstraint('employee_id', 'appointment_id')
     )
     # ### end Alembic commands ###
