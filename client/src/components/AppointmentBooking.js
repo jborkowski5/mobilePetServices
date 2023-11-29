@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
+import { useAuth } from '././AuthContext'; 
 
 const AppointmentBooking = () => {
+    const { isLoggedIn } = useAuth();
+    const [cartItems, setCartItems] = useState([]);
     const [userAnimals, setUserAnimals] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [services, setServices] = useState([]);
@@ -10,6 +12,20 @@ const AppointmentBooking = () => {
     const [selectedServices, setSelectedServices] = useState([]);
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
+
+    // Function to add selected services to the cart
+    const addToCart = () => {
+        const itemsToAdd = selectedServices.map((serviceId) =>
+            services.find((service) => service.id === parseInt(serviceId))
+        );
+        setCartItems(itemsToAdd);
+    };
+
+    // Function to calculate the total price of items in the cart
+    const calculateTotal = () => {
+        const total = cartItems.reduce((acc, curr) => acc + curr.price, 0);
+        return total;
+    };
 
     // Function to fetch user animals
     const getUserAnimals = async () => {
@@ -57,10 +73,17 @@ const AppointmentBooking = () => {
     };
 
     useEffect(() => {
-        getUserAnimals();
-        getAllEmployees();
-        getAllServices();
-    }, []);
+        if (isLoggedIn) {
+            // Fetch data when the user is logged in
+            getUserAnimals();
+            getAllEmployees();
+            getAllServices();
+        }
+    }, [isLoggedIn]);
+
+    if (!isLoggedIn) {
+        return <p>Please log in to book an appointment.</p>; // Render a message for non-logged-in users
+    }
 
     // Function to handle form submission and create an appointment
     const handleSubmit = async (e) => {
@@ -148,8 +171,21 @@ const AppointmentBooking = () => {
             </div>
             <button type="submit">Create Appointment</button>
         </form>
+        {/* Cart section */}
+        <div>
+            <h2>Appointment Calculator</h2>
+            <button onClick={addToCart}>Update Total</button>
+            <ul>
+                {cartItems.map((item) => (
+                    <li key={item.id}>
+                        {item.name} - ${item.price}
+                    </li>
+                ))}
+            </ul>
+            <p>Total: ${calculateTotal()}</p>
+        </div>
         </div>
     );
-    };
+};
 
 export default AppointmentBooking;

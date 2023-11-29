@@ -141,35 +141,31 @@ def get_user_animals():
 
 @app.route('/employees', methods=['GET'])
 def get_all_employees():
-    if 'user_id' in session:  # Assuming you're using a session for user authentication
-        employees = Employee.query.all()
-        employee_list = []
-        for employee in employees:
-            employee_info = {
-                'id': employee.id,
-                'name': employee.name,
-                # Add other employee details if needed
-            }
-            employee_list.append(employee_info)
-        return jsonify(employee_list), 200
-    return jsonify({'message': 'Unauthorized'}), 401
+    employees = Employee.query.all()
+    employee_list = []
+    for employee in employees:
+        employee_info = {
+            'id': employee.id,
+            'name': employee.name,
+            # Add other employee details if needed
+        }
+        employee_list.append(employee_info)
+    return jsonify(employee_list), 200
 
 # Route to get all services
 @app.route('/services', methods=['GET'])
 def get_all_services():
-    if 'user_id' in session:  # Assuming you're using a session for user authentication
-        services = Service.query.all()
-        service_list = []
-        for service in services:
-            service_info = {
-                'id': service.id,
-                'name': service.name,
-                'description': service.description,
-                'price': service.price,
-            }
-            service_list.append(service_info)
-        return jsonify(service_list), 200
-    return jsonify({'message': 'Unauthorized'}), 401
+    services = Service.query.all()
+    service_list = []
+    for service in services:
+        service_info = {
+            'id': service.id,
+            'name': service.name,
+            'description': service.description,
+            'price': service.price,
+        }
+        service_list.append(service_info)
+    return jsonify(service_list), 200
 
 @app.route('/create_appointment', methods=['POST'])
 def create_appointment():
@@ -299,7 +295,7 @@ def get_appointments():
 @app.route('/logout', methods=['GET'])
 def logout():
     session.pop('user_id', None)
-    return jsonify({'message': 'Logged out successfully'}), 200    
+    return jsonify({'message': 'Logged out successfully'}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

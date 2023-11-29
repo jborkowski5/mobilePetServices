@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
+
 const Employees = () => {
     const [employees, setEmployees] = useState([]);
+
 
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
                 const response = await fetch('/employees');
-                if (response.ok) {                          
+                if (response.ok) {
                     const data = await response.json();
                     setEmployees(data);
                     console.log(data);

@@ -1,10 +1,13 @@
 // UserInfo.js
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '././AuthContext'; // Update the path as needed
 import AnimalList from './AnimalList';
 import AnimalForm from './AnimalForm';
 
 const UserInfo = () => {
+    const { isLoggedIn } = useAuth(); // Get the isLoggedIn state from AuthContext
+
     const [userInfo, setUserInfo] = useState(null);
     const [userAnimals, setUserAnimals] = useState([]);
     const [showAnimalForm, setShowAnimalForm] = useState(false);
@@ -48,9 +51,15 @@ const UserInfo = () => {
     }, []);
 
     useEffect(() => {
-        fetchUserInformation();
-        fetchUserAnimals();
-    }, [fetchUserInformation, fetchUserAnimals]);
+        if (isLoggedIn) {
+            fetchUserInformation();
+            fetchUserAnimals();
+        }
+    }, [isLoggedIn]);
+
+    if (!isLoggedIn) {
+        return <p>Please log in to view user information.</p>; // Render a message for non-logged-in users
+    }
 
     const handleAddAnimal = async (formData) => {
         try {
@@ -74,6 +83,7 @@ const UserInfo = () => {
                 console.log('New animal added successfully:', newAnimal);
                 fetchUserInformation();
                 setShowAnimalForm(false);
+                location.reload();
             } else {
                 const errorMessage = await response.json();
                 console.error('Failed to add new animal:', errorMessage.message);
@@ -86,22 +96,27 @@ const UserInfo = () => {
     };
 
     const handleDeleteAnimal = async (animalId) => {
-        try {
+        const confirmDelete = window.confirm('Are you sure you want to delete this animal?');
+      
+        if (confirmDelete) {
+          try {
             const response = await fetch(`/users/${userInfo.id}/animals/${animalId}`, {
-                method: 'DELETE',
+              method: 'DELETE',
             });
-
+      
             if (response.ok) {
-                console.log('Animal deleted successfully');
-                fetchUserInformation();
+              console.log('Animal deleted successfully');
+              fetchUserInformation();
+              location.reload();
             } else {
-                const errorMessage = await response.json();
-                console.error('Failed to delete animal:', errorMessage.message);
+              const errorMessage = await response.json();
+              console.error('Failed to delete animal:', errorMessage.message);
             }
-        } catch (error) {
+          } catch (error) {
             console.error('Error occurred while deleting animal:', error);
+          }
         }
-    };
+      };
 
     return (
         <div>
@@ -113,6 +128,9 @@ const UserInfo = () => {
                     <p>Address: {userInfo.address}</p>
                     <p>Phone Number: {userInfo.phone_number}</p>
                     <p>Email: {userInfo.email}</p>
+                    <p><a href="/change_password">Change Password</a></p>
+            {/* Replace "/change-password" with the actual route for changing the password */}
+
                     
                     {/* Display AnimalList component if userAnimals data is available */}
                     {userAnimals.length > 0 && (
