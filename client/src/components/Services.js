@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import '../Services.css';
 
 const Services = () => {
     const [services, setServices] = useState([]);
@@ -34,17 +34,17 @@ const Services = () => {
     }, []);
 
     return (
-        <div>
-            <h2>Services</h2>
-            <ul>
+        <div className="services-container">
+            <h2 className="services-heading">Services</h2>
+            <div className="services-cards">
                 {services.map((service) => (
-                    <li key={service.id}>
+                    <div className="card" key={service.id}>
                         <h3>{service.name}</h3>
                         <p>{service.description}</p>
                         <p>${service.price}</p>
-                    </li>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };

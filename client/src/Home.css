@@ -1,0 +1,32 @@
+/* Home.css */
+
+/* Styles for the home container */
+.home-container {
+    text-align: center;
+    color: #000; /* Black text color */
+    background-color: #ffc0cb; /* Light pink background color */
+    padding: 20px;
+  }
+  
+  /* Styles for the welcome text */
+  .welcome-text {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+  }
+  
+  /* Styles for the image container */
+  .image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  /* Styles for the images */
+  .home-image {
+    width: 200px;
+    height: 200px;
+    margin: 0 10px;
+    border-radius: 50%; /* Round images */
+  }
+  

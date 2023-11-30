@@ -1,0 +1,42 @@
+/* Services.css */
+
+/* Overall container styling */
+.services-container {
+    padding: 20px;
+    background-color: #fff; /* Set the background to white */
+    color: #000; /* Set the text color to black */
+    text-align: center; /* Align text to the center */
+  }
+  
+  /* Heading for services */
+  .services-heading {
+    margin-bottom: 20px; /* Add some spacing between the heading and cards */
+    color: #ff00b5; /* Set the heading color to hot pink */
+  }
+  
+  /* Styling for service cards */
+  .services-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Center the cards horizontally */
+    gap: 20px;
+  }
+  
+  .card {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 15px;
+    width: 300px;
+    background-color: #fff; /* Set the card background to white */
+    color: #000; /* Set the text color to black */
+  }
+  
+  /* Accent color for card elements */
+  .card h3 {
+    color: #ff00b5; /* Set heading color to black */
+  }
+  
+  .card p {
+    color: black; /* Set paragraph text color to hot pink */
+  }
+  

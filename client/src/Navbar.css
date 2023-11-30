@@ -7,10 +7,11 @@
   padding: 10px;
   display: flex;
   align-items: center; /* Align items vertically */
+  justify-content: center; /* Center items horizontally */
 }
 
 .logo {
-  width: 50px; /* Set the width of the logo */
+  width: 70px; /* Increase the width of the logo */
   height: auto; /* Maintain aspect ratio */
   margin-right: 10px; /* Adjust spacing between logo and links */
 }
@@ -20,8 +21,8 @@ ul {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center;
-  align-items: center; /* Align items horizontally */
+  justify-content: center; /* Center the links horizontally */
+  align-items: center; /* Align links vertically */
 }
 
 li {
@@ -35,5 +36,10 @@ a {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none; /* Remove underline on hover */
+  color: hotpink; /* Set hot pink color on hover */
+}
+
+a.active {
+  color: hotpink; /* Set hot pink color for active link */
 }

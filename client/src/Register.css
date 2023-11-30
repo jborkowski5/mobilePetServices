@@ -1,0 +1,49 @@
+/* Register.css */
+
+/* Overall container styling */
+.register-container {
+    padding: 20px;
+    background-color: #fff; /* Set the background to white */
+    color: #000; /* Set the text color to black */
+    text-align: center; /* Align text to the center */
+  }
+  
+  /* Heading for registration */
+  .register-heading {
+    margin-bottom: 20px; /* Add some spacing between the heading and the form */
+    color: #ff00b5; /* Set the heading color to hot pink */
+  }
+  
+  /* Form styling */
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .register-form input {
+    width: 250px; /* Set the width of the input boxes */
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #000; /* Set input border color to black */
+    color: #000; /* Set input text color to black */
+  }
+  
+  /* Placeholder styling */
+  .register-form input::placeholder {
+    color: #ff00b5; /* Set placeholder color to hot pink */
+  }
+  
+  .register-form button {
+    padding: 8px 20px;
+    border: none;
+    background-color: #ff00b5; /* Set button background to hot pink */
+    color: #fff; /* Set button text color to white */
+    cursor: pointer;
+  }
+  
+  .register-form button:hover {
+    background-color: #000; /* Change button background color on hover */
+    color: #ff00b5; /* Change button text color on hover */
+  }
+  

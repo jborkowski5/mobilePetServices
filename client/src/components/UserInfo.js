@@ -11,6 +11,7 @@ const UserInfo = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [userAnimals, setUserAnimals] = useState([]);
     const [showAnimalForm, setShowAnimalForm] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     const fetchUserInformation = useCallback(async () => {
         try {
@@ -97,42 +98,84 @@ const UserInfo = () => {
 
     const handleDeleteAnimal = async (animalId) => {
         const confirmDelete = window.confirm('Are you sure you want to delete this animal?');
-      
-        if (confirmDelete) {
-          try {
-            const response = await fetch(`/users/${userInfo.id}/animals/${animalId}`, {
-              method: 'DELETE',
-            });
-      
-            if (response.ok) {
-              console.log('Animal deleted successfully');
-              fetchUserInformation();
-              location.reload();
-            } else {
-              const errorMessage = await response.json();
-              console.error('Failed to delete animal:', errorMessage.message);
+
+            if (confirmDelete) {
+            try {
+                const response = await fetch(`/users/${userInfo.id}/animals/${animalId}`, {
+                method: 'DELETE',
+                });
+                if (response.ok) {
+                console.log('Animal deleted successfully');
+                fetchUserInformation();
+                location.reload();
+                } else {
+                const errorMessage = await response.json();
+                console.error('Failed to delete animal:', errorMessage.message);
+                }
+            } catch (error) {
+                console.error('Error occurred while deleting animal:', error);
             }
-          } catch (error) {
-            console.error('Error occurred while deleting animal:', error);
-          }
-        }
-      };
+            }
+        };
+
+        const headingStyle = {
+            marginBottom: '20px',
+            color: '#ff00b5', // Kept heading color as hot pink
+            fontSize: '24px', // Set font size for headings
+        };
+        
+        const paragraphStyle = {
+            marginBottom: '10px',
+            color: '#000', // Changed paragraph text color to black
+        };
+        
+        const linkStyle = {
+            color: '#ff00b5',
+        };
+        
+        const buttonStyle = {
+            marginTop: '10px',
+            padding: '12px 20px', // Increased padding for a larger button
+            backgroundColor: 'transparent',
+            color: '#ff00b5',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            textDecoration: 'none',
+            fontWeight: 'bold', // Making the text bold
+            fontSize: '16px', // Increased font size
+            ...(isHovered && {
+            textDecoration: 'none', 
+            color: '#ff0077',
+            }),
+        };
+
+        const containerStyle = {
+            padding: '20px',
+            backgroundColor: '#fff', // Changed background color to white
+            color: '#000', // Changed text color to black
+            textAlign: 'center',
+            marginTop: '50px', // Added margin top for spacing
+        };
+    
+            const loginMessageStyle = {
+            color: '#ff00b5', // Heading color as hot pink
+            fontSize: '24px', // Set font size for heading
+        };      
 
     return (
-        <div>
-            <h2>User Information</h2>
+        <div className="user-info-container">
+            <h2 style={headingStyle}>User Information</h2>
             {userInfo ? (
                 <div>
-                    <p>Name: {userInfo.name}</p>
-                    <p>Username: {userInfo.username}</p>
-                    <p>Address: {userInfo.address}</p>
-                    <p>Phone Number: {userInfo.phone_number}</p>
-                    <p>Email: {userInfo.email}</p>
-                    <p><a href="/change_password">Change Password</a></p>
-            {/* Replace "/change-password" with the actual route for changing the password */}
-
+                    <p style={paragraphStyle}>Name: {userInfo.name}</p>
+                    <p style={paragraphStyle}>Username: {userInfo.username}</p>
+                    <p style={paragraphStyle}>Address: {userInfo.address}</p>
+                    <p style={paragraphStyle}>Phone Number: {userInfo.phone_number}</p>
+                    <p style={paragraphStyle}>Email: {userInfo.email}</p>
+                    <a style={linkStyle}href="/change_password">Change Password</a>
                     
-                    {/* Display AnimalList component if userAnimals data is available */}
+                    {/* Displays AnimalList component if userAnimals data is available */}
                     {userAnimals.length > 0 && (
                         <AnimalList
                             animals={userAnimals}
@@ -140,8 +183,15 @@ const UserInfo = () => {
                         />
                     )}
 
-                    <button onClick={() => setShowAnimalForm(!showAnimalForm)}>
-                        {showAnimalForm ? 'Hide' : 'Add'} Animal Form
+                    <button
+                        style={buttonStyle}
+                        onClick={() => setShowAnimalForm(!showAnimalForm)}
+                        onMouseOver={() => setIsHovered(true)}
+                        onMouseOut={() => setIsHovered(false)}
+                    >
+
+                        {showAnimalForm ? 'Hide' : 'New'} Animal Form
+                        
                     </button>
                     {showAnimalForm && (
                         <AnimalForm user={userInfo} onSubmit={handleAddAnimal} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link, NavLink } from 'react-router-dom';
 import { useAuth } from './AuthContext'; // Import the useAuth hook
 import Register from './Register';
 import Login from './Login';
@@ -26,29 +26,29 @@ function App() {
           <ul>
             {/* Links to different functionalities */}
             <li>
-              <Link to="/">Home</Link> {/* Link to the home page */}
+              <NavLink exact to="/" activeClassName="active">HOME</NavLink>
             </li>
             <li>
-              <Link to="/user_info">User Profile</Link>
+              <NavLink exact to="/services" activeClassName="active">OUR SERVICES</NavLink>
             </li>
             <li>
-              <Link to="/services">Services</Link>
+              <NavLink exact to="/user_info" activeClassName="active">USER PROFILE</NavLink>
             </li>
             <li>
-              <Link to="/employees">Staff</Link>
+              <NavLink exact to="/employees" activeClassName="active">MEET THE STAFF</NavLink>
             </li>
             <li>
-              <Link to="/appointment_booking">Appointment</Link>
+              <NavLink exact to="/appointment_booking" activeClassName="active">BOOK APPOINTMENT</NavLink>
               {/* Add link for Appointment Booking */}
             </li>
             {!isLoggedIn && ( // Show Login link only if the user is not logged in
               <li>
-                <Link to="/login">Login</Link>
+                <NavLink exact to="/login" activeClassName="active">LOGIN</NavLink>
               </li>
             )}
             {isLoggedIn && ( // Show Logout link only if the user is logged in
               <li>
-                <Link to="/logout" onClick={logout}>Logout</Link>
+                <NavLink to="/logout" activeClassName="active" onClick={logout}>LOGOUT</NavLink>
               </li>
             )}
           </ul>

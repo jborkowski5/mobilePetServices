@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '././AuthContext';
 import { Link, useHistory } from 'react-router-dom'; // Import Link and useHistory from react-router-dom
+import '../Login.css';
 
 const Login = () => {
   const { login } = useAuth();
@@ -49,10 +50,10 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
-      <form onSubmit={handleFormSubmit}>
+    <div className="login-container">
+      <h2 className="login-heading">Login</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <form className="login-form" onSubmit={handleFormSubmit}>
         <input
           type="text"
           name="username"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom'; // Import useHistory from react-router-dom
+import { useHistory } from 'react-router-dom';
 
 // Function to validate password
 const validatePassword = (password) => {
@@ -8,20 +8,18 @@ const validatePassword = (password) => {
 };
 
 const ChangePassword = () => {
-  const history = useHistory(); // Get the history object
-
+  const history = useHistory();
   const [formData, setFormData] = useState({
     oldPassword: '',
     newPassword: '',
     newPasswordConfirm: '',
   });
-
   const [error, setError] = useState('');
-  const [changeSuccess, setChangeSuccess] = useState(false); // State for password change success
+  const [changeSuccess, setChangeSuccess] = useState(false);
 
   useEffect(() => {
     if (changeSuccess) {
-      history.push('/user_info'); // Redirect to the UserInfo component route
+      history.push('/user_info');
     }
   }, [changeSuccess, history]);
 
@@ -59,7 +57,7 @@ const ChangePassword = () => {
 
       if (response.ok) {
         console.log('Password changed successfully!');
-        setChangeSuccess(true); // Set password change success state to true
+        setChangeSuccess(true);
       } else {
         const errorMessage = await response.json();
         console.error('Password change failed:', errorMessage.message);
@@ -69,40 +67,73 @@ const ChangePassword = () => {
     }
   };
 
+  const formStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: '300px',
+    margin: 'auto',
+  };
+
+  const inputStyle = {
+    padding: '8px',
+    margin: '8px 0',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+  };
+
+  const buttonStyle = {
+    padding: '8px 16px',
+    backgroundColor: '#ff00b5',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  };
+  const formContainerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh', // Adjust the height to your preference
+  };
+
   return (
-    <div>
-      <h2>Change Password</h2>
-      {changeSuccess && (
-        <p style={{ color: 'green' }}>Password changed successfully!</p>
-      )}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleFormSubmit}>
+    <div style={formContainerStyle}>
+      <div>
+        <h2>Change Password</h2>
+        {changeSuccess && (
+          <p style={{ color: 'green' }}>Password changed successfully!</p>
+        )}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <form style={formStyle} onSubmit={handleFormSubmit}>
         <input
           type="password"
           name="oldPassword"
           placeholder="Current Password"
           value={formData.oldPassword}
           onChange={handleInputChange}
+          style={inputStyle}
         />
-        <br />
         <input
           type="password"
           name="newPassword"
           placeholder="New Password"
           value={formData.newPassword}
           onChange={handleInputChange}
+          style={inputStyle}
         />
-        <br />
         <input
           type="password"
           name="newPasswordConfirm"
           placeholder="Confirm New Password"
           value={formData.newPasswordConfirm}
           onChange={handleInputChange}
+          style={inputStyle}
         />
-        <br />
-        <button type="submit">Change Password</button>
+        <button type="submit" style={buttonStyle}>
+          Change Password
+        </button>
       </form>
+      </div>
     </div>
   );
 };
