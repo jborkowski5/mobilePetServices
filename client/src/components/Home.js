@@ -7,7 +7,7 @@ const Home = () => {
     return (
         <div className="home-container">
             <h1 className="welcome-text">Welcome to Community Mobile Pet Services!</h1>
-            <p>This is the home page content.</p>
+            <p>Log in or Register to get started!</p>
             <div className="image-container">
             <img src={workersmiling} alt="Image 1" className="home-image" />
             <img src={prettypit} alt="Image 2" className="home-image" />
