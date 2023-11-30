@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, NavLink } from 'react-router-dom';
-import { useAuth } from './AuthContext'; // Import the useAuth hook
+import { useAuth } from './AuthContext'; 
 import Register from './Register';
 import Login from './Login';
 import Logout from './Logout';
@@ -9,9 +9,9 @@ import Services from './Services';
 import Employees from './Employees';
 import AppointmentBooking from './AppointmentBooking'; 
 import ChangePassword from './ChangePassword'; 
-import Home from './Home'; // Import the Home component
-import '.././Navbar.css'; // Import the Navbar CSS file
-import logo from '../assets/logo.jpeg'; // Import your logo image
+import Home from './Home'; 
+import '.././Navbar.css'; 
+import logo from '../assets/logo.jpeg'; 
 
 function App() {
   const { isLoggedIn, logout } = useAuth(); // Get isLoggedIn and logout from AuthContext
@@ -24,7 +24,6 @@ function App() {
             <img src={logo} alt="Logo" className="logo" /> {/* Logo linking to home */}
           </Link>
           <ul>
-            {/* Links to different functionalities */}
             <li>
               <NavLink exact to="/" activeClassName="active">HOME</NavLink>
             </li>
@@ -39,14 +38,13 @@ function App() {
             </li>
             <li>
               <NavLink exact to="/appointment_booking" activeClassName="active">BOOK APPOINTMENT</NavLink>
-              {/* Add link for Appointment Booking */}
             </li>
-            {!isLoggedIn && ( // Show Login link only if the user is not logged in
+            {!isLoggedIn && ( 
               <li>
                 <NavLink exact to="/login" activeClassName="active">LOGIN</NavLink>
               </li>
             )}
-            {isLoggedIn && ( // Show Logout link only if the user is logged in
+            {isLoggedIn && ( 
               <li>
                 <NavLink to="/logout" activeClassName="active" onClick={logout}>LOGOUT</NavLink>
               </li>

@@ -4,15 +4,12 @@ import '../Services.css';
 const Services = () => {
     const [services, setServices] = useState([]);
 
-
     useEffect(() => {
         const fetchServices = async () => {
             try {
                 const response = await fetch('/services');
                 if (response.ok) {
                     const data = await response.json();
-
-                    // Extracting only id and name from services
                     const modifiedServices = data.map(service => ({
                         id: service.id,
                         name: service.name,

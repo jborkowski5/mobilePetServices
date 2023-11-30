@@ -30,7 +30,7 @@ const AnimalForm = ({ user, animal, onSubmit }) => {
       return;
     }
 
-    // Check if weight is not negative
+    // Makes sure weight is not negative
     if (formData.weight < 0) {
       alert('Weight cannot be negative.');
       return;
@@ -68,7 +68,7 @@ const AnimalForm = ({ user, animal, onSubmit }) => {
     margin: '5px',
     borderRadius: '4px',
     border: '1px solid #000',
-    width: '40%', // Adjust width as desired
+    width: '40%',
     boxSizing: 'border-box',
   };
   
@@ -77,7 +77,7 @@ const AnimalForm = ({ user, animal, onSubmit }) => {
     margin: '5px',
     borderRadius: '4px',
     border: '1px solid #000',
-    width: '40%', // Adjust width as desired
+    width: '40%', 
     boxSizing: 'border-box',
   };
   

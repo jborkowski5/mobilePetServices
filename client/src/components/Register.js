@@ -98,10 +98,10 @@ const Register = () => {
     // Redirect to the login page after successful registration
     if (registrationSuccess) {
         return (
-            <div>
-                <h2>Registration Successful!</h2>
+            <div className="success-container">
+                <h2 className="success-heading">Registration Successful!</h2>
                 <p>Your account has been created successfully.</p>
-                <p>Please <a href="/login">Login</a> to continue.</p>
+                <p>Please <a href="/login" className="login-link">Login</a> to continue.</p>
             </div>
         );
     }

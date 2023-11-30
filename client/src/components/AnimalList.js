@@ -3,36 +3,36 @@ import React from 'react';
 const AnimalList = ({ animals, onDelete }) => {
   const containerStyle = {
     padding: '20px',
-    backgroundColor: '#fff', // Changed background color to white
-    color: '#000', // Changed text color to black
+    backgroundColor: '#fff', 
+    color: '#000', 
     textAlign: 'center',
   };
 
   const headingStyle = {
     marginBottom: '20px',
-    color: '#ff00b5', // Kept heading color as hot pink
-    fontSize: '24px', // Set font size for headings
+    color: '#ff00b5', 
+    fontSize: '24px', 
   };
 
   const listItemStyle = {
     marginBottom: '20px',
-    border: '1px solid #000', // Added black border around each animal card
-    borderRadius: '20px', // Increased border radius for more rounded corners
-    padding: '10px', // Added padding for better spacing
+    border: '1px solid #000', 
+    borderRadius: '20px', 
+    padding: '10px', 
   };
 
   const buttonStyle = {
     padding: '8px 16px',
-    backgroundColor: 'transparent', // Changed button background to clear
-    color: '#ff00b5', // Changed button text color to hot pink
-    border: '1px solid #ff00b5', // Added a border for visibility
+    backgroundColor: 'transparent', 
+    color: '#ff00b5', 
+    border: '1px solid #ff00b5', 
     borderRadius: '4px',
     cursor: 'pointer',
   };
 
   const buttonHoverStyle = {
     backgroundColor: '#ff00b5',
-    color: '#fff', // Changed text color on hover to white
+    color: '#fff', 
   };
 
   return (

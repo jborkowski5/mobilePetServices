@@ -120,13 +120,13 @@ const UserInfo = () => {
 
         const headingStyle = {
             marginBottom: '20px',
-            color: '#ff00b5', // Kept heading color as hot pink
-            fontSize: '24px', // Set font size for headings
+            color: '#ff00b5', 
+            fontSize: '24px', 
         };
         
         const paragraphStyle = {
             marginBottom: '10px',
-            color: '#000', // Changed paragraph text color to black
+            color: '#000', 
         };
         
         const linkStyle = {
@@ -135,15 +135,15 @@ const UserInfo = () => {
         
         const buttonStyle = {
             marginTop: '10px',
-            padding: '12px 20px', // Increased padding for a larger button
+            padding: '12px 20px', 
             backgroundColor: 'transparent',
             color: '#ff00b5',
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
             textDecoration: 'none',
-            fontWeight: 'bold', // Making the text bold
-            fontSize: '16px', // Increased font size
+            fontWeight: 'bold', 
+            fontSize: '16px', 
             ...(isHovered && {
             textDecoration: 'none', 
             color: '#ff0077',
@@ -152,15 +152,15 @@ const UserInfo = () => {
 
         const containerStyle = {
             padding: '20px',
-            backgroundColor: '#fff', // Changed background color to white
-            color: '#000', // Changed text color to black
+            backgroundColor: '#fff', 
+            color: '#000', 
             textAlign: 'center',
-            marginTop: '50px', // Added margin top for spacing
+            marginTop: '50px', 
         };
     
             const loginMessageStyle = {
-            color: '#ff00b5', // Heading color as hot pink
-            fontSize: '24px', // Set font size for heading
+            color: '#ff00b5', 
+            fontSize: '24px', 
         };      
 
     return (

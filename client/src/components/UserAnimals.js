@@ -8,7 +8,7 @@ const UserAnimals = () => {
 
     const fetchAnimals = async () => {
       try {
-        const response = await fetch(`/user/${userId}/animals`); // Replace with your API endpoint
+        const response = await fetch(`/user/${userId}/animals`);
 
         if (response.ok) {
           const animalData = await response.json();
@@ -28,20 +28,20 @@ const UserAnimals = () => {
 
   const containerStyle = {
     padding: '20px',
-    backgroundColor: '#fff', // Changed background color to white
-    color: '#000', // Changed text color to black
+    backgroundColor: '#fff', 
+    color: '#000', 
     textAlign: 'center',
   };
 
   const headingStyle = {
     marginBottom: '20px',
-    color: '#ff00b5', // Kept heading color as hot pink
-    fontSize: '24px', // Set font size for headings
+    color: '#ff00b5', 
+    fontSize: '24px', 
   };
 
   const listItemStyle = {
     marginBottom: '10px',
-    color: '#000', // Changed list item text color to black
+    color: '#000', 
   };
 
   return (
@@ -52,7 +52,7 @@ const UserAnimals = () => {
           <li key={animal.id} style={listItemStyle}>
             {animal.name} - {animal.type}
           </li>
-          // Display other details as needed
+          
         ))}
       </ul>
     </div>

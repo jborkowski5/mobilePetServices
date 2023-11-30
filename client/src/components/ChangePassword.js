@@ -35,11 +35,13 @@ const ChangePassword = () => {
       setError(
         'New password should contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one symbol.'
       );
+      setChangeSuccess(false); // Reset changeSuccess state
       return;
     }
 
     if (formData.newPassword !== formData.newPasswordConfirm) {
       setError('New passwords do not match.');
+      setChangeSuccess(false); // Reset changeSuccess state
       return;
     }
 
@@ -56,14 +58,24 @@ const ChangePassword = () => {
       });
 
       if (response.ok) {
-        console.log('Password changed successfully!');
+        setError(''); // Clear any previous error message
         setChangeSuccess(true);
+
+        // Delay the redirection to show the success message before redirecting
+        setTimeout(() => {
+          history.push('/user_info');
+        }, 20000); // Adjust the delay time (in milliseconds) as needed
+      } else if (response.status === 401) {
+        setError('Incorrect current password.');
+        setChangeSuccess(false); // Reset changeSuccess state
       } else {
         const errorMessage = await response.json();
-        console.error('Password change failed:', errorMessage.message);
+        setError(`Password change failed: ${errorMessage.message}`);
+        setChangeSuccess(false); // Reset changeSuccess state
       }
     } catch (error) {
-      console.error('Error occurred while changing password:', error);
+      setError(`Error occurred while changing password: ${error.message}`);
+      setChangeSuccess(false); // Reset changeSuccess state
     }
   };
 
@@ -99,8 +111,7 @@ const ChangePassword = () => {
   return (
     <div style={formContainerStyle}>
       <div>
-        <h2>Change Password</h2>
-        {changeSuccess && (
+      {changeSuccess && !error && (
           <p style={{ color: 'green' }}>Password changed successfully!</p>
         )}
         {error && <p style={{ color: 'red' }}>{error}</p>}

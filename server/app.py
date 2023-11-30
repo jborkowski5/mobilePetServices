@@ -253,7 +253,7 @@ def delete_animal(user_id, animal_id):
 
 
 
-# # Route to edit an animal's details
+# Route to edit an animal's details
 # @app.route('/users/<int:user_id>/animals/<int:animal_id>', methods=['PUT'])
 # def edit_animal(user_id, animal_id):
 #     data = request.json

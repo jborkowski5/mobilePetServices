@@ -3,7 +3,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 
 # Flask-related imports
 from flask_wtf import FlaskForm
-from config import db
+from config import db, app
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.utils import secure_filename

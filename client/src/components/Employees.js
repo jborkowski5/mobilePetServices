@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../Employees.css'; // Import the Employees component CSS file
+import '../Employees.css';
 
 const Employees = () => {
     const [employees, setEmployees] = useState([]);
